@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список станций</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pagination a {
+            display: inline-block;
+            margin: 0 5px;
+            padding: 8px 16px;
+            text-decoration: none;
+            background: #007bff;
+            color: white;
+            border-radius: 4px;
+        }
+        .pagination a:hover {
+            background: #0056b3;
+        }
+        .pagination .active {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Список станций</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>NE</th>
+                <th>Адрес</th>
+                <th>Широта</th>
+                <th>Долгота</th>
+                <th>GSM</th>
+                <th>UMTS</th>
+                <th>LTE</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for station in stations %}
+            <tr>
+                <td>{{ station.id }}</td>
+                <td>{{ station.ne }}</td>
+                <td>{{ station.address }}</td>
+                <td>{{ station.latitude }}</td>
+                <td>{{ station.longitude }}</td>
+                <td>{{ station.gsm|yesno:"Да,Нет" }}</td>
+                <td>{{ station.umts|yesno:"Да,Нет" }}</td>
+                <td>{{ station.lte|yesno:"Да,Нет" }}</td>
+                <td>{{ station.status|yesno:"Активна,Неактивна" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Пагинация -->
+    <div class="pagination">
+        {% if page.has_previous %}
+        <a href="?page={{ page.previous_page_number }}">Предыдущая</a>
+        {% endif %}
+
+        {% for num in page.paginator.page_range %}
+            {% if num == page.number %}
+            <a href="?page={{ num }}" class="active">{{ num }}</a>
+            {% else %}
+            <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page.has_next %}
+        <a href="?page={{ page.next_page_number }}">Следующая</a>
+        {% endif %}
+    </div>
+</body>
+</html>
